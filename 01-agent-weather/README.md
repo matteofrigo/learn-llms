@@ -4,7 +4,7 @@
 * Example of RAG (Retrieval-Augmented Generation) pattern that uses an API to get real weather data in real time.
 
 ## How it works
-- `main.py` loads a `PromptRegistry`, creates a Mistral chat client, registers the `get_weather_data` tool into the agent, and runs the agent on “What's the weather like in Nice (France)?”.
+- `main.py` loads a `PromptRegistry`, creates a Mistral chat client, registers the `get_weather_data` tool into the agent, and runs the agent on “What's the weather like in Venezia?”.
 - `src/agent.py` loops by asking asks the `agent_router` prompt what to do, parses the JSON decision, either returns a final answer or calls a tool, and logs each step.
 - `src/tools.py` contains the wrapper to the api call that gets the weather data.
 - `prompts/registry.yaml` maps environments to prompt versions.
