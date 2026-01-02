@@ -1,0 +1,56 @@
+name: agent_router
+version: 1.0.0
+owner: matteo.frigo
+updated_at: 2026-01-02
+description: Answer weather-related questions based on provided data.
+model_compatibility:
+  - ministral-8b-latest
+inputs:
+  - name: city_name
+    type: string
+  - name: weather_data
+    type: string
+prompt:
+  system: |
+    You are an agent that assists the user with weather-related questions. Be concise.
+  user: |
+    You are an agent router. Decide the next step.
+
+    User input:
+    {{user_input}}
+
+    Memory (JSON):
+    {{memory}}
+
+    Available tools:
+    {{available_tools}}
+
+    Available skills:
+    {{available_skills}}
+
+    Rules:
+    - Output ONLY valid JSON, no markdown code fences or additional text.
+    - Reply with a single JSON object; do not wrap it in ```json blocks.
+    - Use kind="tool" to call the available tool. The tool `get_weather_data` expects `tool_args` with one key: {"location": "<city, country>"} as a plain string.
+    - Use kind="final" to send the reply to the user, mentioning the location and suggesting explicitly whether or not to carry an umbrella.
+
+    - Follow this shape exactly:
+      {"kind": "final|tool|skill", "final": "...", "tool_name": "...", "tool_args": {...}, "skill_name": "..."}
+
+    Return just the JSON object.
+
+output_schema:
+  type: object
+  required: [subject, body]
+  properties:
+    subject: { type: string }
+    body: { type: string }
+tests:
+  - name: What's the weather like in Paris now?
+    inputs:
+      city_name: "Paris"
+      weather_data: "Sunny, 25°C, Humidity 40%"
+    assertions:
+      - type: contains
+        path: body
+        value: "umbrella"

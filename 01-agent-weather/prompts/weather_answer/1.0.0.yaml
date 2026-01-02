@@ -1,0 +1,41 @@
+name: weather_answer
+version: 1.0.0
+owner: matteo.frigo
+updated_at: 2026-01-02
+description: Answer weather-related questions based on provided data.
+model_compatibility:
+  - ministral-8b-latest
+inputs:
+  - name: city_name
+    type: string
+  - name: weather_data
+    type: string
+prompt:
+  system: |
+    You are an agent that assists the user with weather-related questions. Be concise.
+  user: |
+    City name:
+    {{city_name}}
+
+    Weather data:
+    {{weather_data}}
+
+    Write a reply to the user, mentioning the location and suggesting explicitly whether or not to carry an umbrella.
+output_schema:
+  type: object
+  required: [subject, body]
+  properties:
+    subject: { type: string }
+    body: { type: string }
+tests:
+  - name: What's the weather like in Paris now?
+    inputs:
+      city_name: "Paris"
+      weather_data: "Sunny, 25°C, Humidity 40%"
+    assertions:
+      - type: contains
+        path: body
+        value: "umbrella"
+      - type: contains
+        path: body
+        value: "Paris"

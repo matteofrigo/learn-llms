@@ -1,0 +1,4 @@
+environments:
+  dev:
+    agent_router: 1.0.0
+    weather_answer: 1.0.0
